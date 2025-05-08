@@ -1,4 +1,4 @@
-INSERT INTO Player (playerid, usernamename) VALUES
+INSERT INTO Player (playerid, username) VALUES
 (1, 'Laura Stevenson'),
 (2, 'Bob Jones'),
 (3, 'Charlie Brown'),

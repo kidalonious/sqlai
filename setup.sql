@@ -23,7 +23,7 @@ create table Moves (
     gameID integer NOT NULL,
     moveNumber integer NOT NULL,
     moveMade VARCHAR(10) NOT NULL,
-    computerEvalAfterMove FLOAT
+    computerEvalAfterMove FLOAT,
     PRIMARY KEY (gameID, moveNumber),
     FOREIGN KEY (gameID) references Game (gameID)
 );
@@ -38,7 +38,7 @@ create table Friend (
 
 create table TimeControl (
     timeControlID integer NOT NULL,
-    timeControl VARCHAR(30) NOT NULL
+    timeControl VARCHAR(30) NOT NULL,
     PRIMARY KEY (timeControlID)
 );
 
@@ -49,10 +49,10 @@ CREATE TABLE TimeControlRating (
     PRIMARY KEY (playerID, timeControlID),
     FOREIGN KEY (playerID) references Player (playerID),
     FOREIGN KEY (timeControlID) references TimeControl (timeControlID)
-)
+);
 
 CREATE TABLE Result (
     resultID integer NOT NULL,
-    result VARCHAR(255)
+    result VARCHAR(255),
     PRIMARY KEY (resultID)
-)
+);
