@@ -71,14 +71,14 @@ strategies = {
 }
 
 questions = [
-    "Which are the most awarded dogs?",
-    "Which dogs have multiple owners?",
-    "Which people have multiple dogs?",
-    "What are the top 3 cities represented?",
-    "What are the names and cities of the dogs who have awards?",
-    "Who has more than one phone number?",
-    "Who doesn't have a way for us to text them?",
-    "Will we have a problem texting any of the previous award winners?"
+    "Which player has the most wins?",
+    "Which player has the most friends?",
+    "Which players have the highest ratings in each time control?",
+    "What are the most popular dates for chess games?",
+    "What games ended in draws?",
+    "How many games have ended in each result type?",
+    "Who has a puzzle rating?",
+    "Who would be expected to win a rapid chess tournament?"
     # "I need insert sql into my tables can you provide good unique data?"
 ]
 
