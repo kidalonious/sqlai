@@ -1,0 +1,62 @@
+{
+  "strategy": "single_domain_double_shot",
+  "prompt_prefix": "create table Player (\n    playerID integer primary key,\n    username varchar(20) not null,\n    puzzleRating smallint\n);\n\ncreate table Game (\n    gameID integer primary key,\n    whitePlayerID integer not null,\n    blackPlayerID integer not null,\n    winnerID integer,\n    gameDate date,\n    resultID integer,\n    timeControlID integer not null,\n    foreign key (whitePlayerID) references Player (playerID),\n    foreign key (blackPlayerID) references Player (playerID),\n    foreign key (winnerID) references Player (playerID),\n    foreign key (resultID) references Result (resultID),\n    foreign key (timeControlID) references TimeControl (timeControlID)\n);\n\ncreate table Moves (\n    gameID integer NOT NULL,\n    moveNumber integer NOT NULL,\n    moveMade VARCHAR(10) NOT NULL,\n    computerEvalAfterMove FLOAT,\n    PRIMARY KEY (gameID, moveNumber),\n    FOREIGN KEY (gameID) references Game (gameID)\n);\n\ncreate table Friend (\n    playerID integer NOT NULL,\n    friendID integer NOT NULL,\n    PRIMARY KEY (playerID, friendID),\n    FOREIGN KEY (playerID) references Player (playerID),\n    FOREIGN KEY (friendID) references Player (playerID)\n);\n\ncreate table TimeControl (\n    timeControlID integer NOT NULL,\n    timeControl VARCHAR(30) NOT NULL,\n    PRIMARY KEY (timeControlID)\n);\n\nCREATE TABLE TimeControlRating (\n    playerID integer NOT NULL,\n    timeControlID integer NOT NULL,\n    eloRating smallint,\n    PRIMARY KEY (playerID, timeControlID),\n    FOREIGN KEY (playerID) references Player (playerID),\n    FOREIGN KEY (timeControlID) references TimeControl (timeControlID)\n);\n\nCREATE TABLE Result (\n    resultID integer NOT NULL,\n    result VARCHAR(255),\n    PRIMARY KEY (resultID)\n);\n Who doesn't have a way for us to text them?  \nSELECT p.person_id, p.name\nFROM person p\nLEFT JOIN phone ph ON p.person_id = ph.person_id AND ph.can_recieve_sms = 1\nWHERE ph.phone_id IS NULL;\n  Give me a sqlite select statement that answers the question. Only respond with sqlite syntax. If there is an error do not expalin it!",
+  "questionResults": [
+    {
+      "question": "Which player has the most wins?",
+      "sql": "\nSELECT p.playerID, p.username\nFROM Player p\nJOIN Game g ON p.playerID = g.winnerID\nGROUP BY p.playerID, p.username\nORDER BY COUNT(g.winnerID) DESC\nLIMIT 1;\n",
+      "queryRawResponse": "[(1, 'Laura Stevenson')]",
+      "friendlyResponse": "Laura Stevenson has the most wins.",
+      "error": "None"
+    },
+    {
+      "question": "Which player has the most friends?",
+      "sql": "ite\nSELECT p.playerID, p.username, COUNT(f.friendID) AS friend_count\nFROM Player p\nJOIN Friend f ON p.playerID = f.playerID\nGROUP BY p.playerID, p.username\nORDER BY friend_count DESC\nLIMIT 1;\n",
+      "queryRawResponse": "[(1, 'Laura Stevenson')]",
+      "friendlyResponse": "Laura Stevenson has the most wins.",
+      "error": "near \"ite\": syntax error"
+    },
+    {
+      "question": "Which players have the highest ratings in each time control?",
+      "sql": "\nSELECT tc.timeControl, p.username, tcr.eloRating\nFROM TimeControlRating tcr\nJOIN Player p ON tcr.playerID = p.playerID\nJOIN TimeControl tc ON tcr.timeControlID = tc.timeControlID\nWHERE (tcr.playerID, tcr.timeControlID, tcr.eloRating) IN (\n    SELECT playerID, timeControlID, MAX(eloRating)\n    FROM TimeControlRating\n    GROUP BY timeControlID\n);\n",
+      "queryRawResponse": "[('Bullet', 'Jimmy Hendricks', 2000), ('Blitz', 'Sydney Smith', 1200), ('Classical', 'Jordan Malone', 1700)]",
+      "friendlyResponse": "Bullet: Jimmy Hendricks (2000), Blitz: Sydney Smith (1200), Classical: Jordan Malone (1700).",
+      "error": "None"
+    },
+    {
+      "question": "What are the most popular dates for chess games?",
+      "sql": "\nSELECT gameDate, COUNT(*) as gameCount\nFROM Game\nGROUP BY gameDate\nORDER BY gameCount DESC;\n",
+      "queryRawResponse": "[('2025-01-11', 2), ('2025-01-10', 2), ('2025-01-09', 2), ('2025-01-08', 2), ('2025-01-07', 2), ('2025-01-06', 2), ('2025-01-05', 2), ('2025-01-04', 2), ('2025-01-03', 2), ('2025-01-02', 2), ('2025-01-01', 2)]",
+      "friendlyResponse": "The most popular dates for chess games are from January 1 to January 11, 2025. Each date has the same level of popularity.",
+      "error": "None"
+    },
+    {
+      "question": "What games ended in draws?",
+      "sql": "\nSELECT g.gameID\nFROM Game g\nJOIN Result r ON g.resultID = r.resultID\nWHERE r.result = 'draw';\n",
+      "queryRawResponse": "[(4,), (9,), (13,), (17,), (22,)]",
+      "friendlyResponse": "Games that ended in draws are: 4, 9, 13, 17, and 22.",
+      "error": "None"
+    },
+    {
+      "question": "How many games have ended in each result type?",
+      "sql": "\nSELECT r.result, COUNT(g.gameID) AS numberOfGames\nFROM Game g\nJOIN Result r ON g.resultID = r.resultID\nGROUP BY r.result;\n",
+      "queryRawResponse": "[('checkmate', 8), ('draw', 5), ('resign', 5), ('timeout', 4)]",
+      "friendlyResponse": "Sure! Here are the results: 8 games ended in checkmate, 5 in draws, 5 by resignation, and 4 due to timeout.",
+      "error": "None"
+    },
+    {
+      "question": "Who has a puzzle rating?",
+      "sql": "\nSELECT playerID, username\nFROM Player\nWHERE puzzleRating IS NOT NULL;\n",
+      "queryRawResponse": "[]",
+      "friendlyResponse": "Could you provide more context or specify the platform or game you're referring to?",
+      "error": "None"
+    },
+    {
+      "question": "Who would be expected to win a rapid chess tournament?",
+      "sql": "\nSELECT p.username\nFROM Player p\nJOIN TimeControlRating tcr ON p.playerID = tcr.playerID\nJOIN TimeControl tc ON tcr.timeControlID = tc.timeControlID\nWHERE tc.timeControl = 'rapid'\nORDER BY tcr.eloRating DESC\nLIMIT 1;\n",
+      "queryRawResponse": "[]",
+      "friendlyResponse": "The expected winner of a rapid chess tournament is often a top-ranked grandmaster, such as Magnus Carlsen or Hikaru Nakamura.",
+      "error": "None"
+    }
+  ]
+}
