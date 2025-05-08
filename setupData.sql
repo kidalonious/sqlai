@@ -31,14 +31,14 @@ INSERT INTO Friend (playerID, friendID) VALUES
 (1, 2),
 (2, 1),
 (3, 1),
-(3, 2)
+(3, 2),
 (4, 5),
 (5, 6),
 (1, 3),
 (1, 4),
 (1, 5)
 ;
-INSERT INTO Game(gameID, whitePlayerID, blackPlayerID, winnerID, date, resultID, timeControlID) VALUES 
+INSERT INTO Game(gameID, whitePlayerID, blackPlayerID, winnerID, gameDate, resultID, timeControlID) VALUES 
 (1, 1, 2, 1, '2025-01-01', 1, 1),
 (2, 1, 3, 1, '2025-01-01', 1, 1),
 (3, 2, 3, 2, '2025-01-02', 2, 3),

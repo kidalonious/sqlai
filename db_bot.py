@@ -42,7 +42,7 @@ print(configPath)
 with open(configPath) as configFile:
     config = json.load(configFile)
 
-openAiClient = OpenAI(api_key = config["openaiKey"])
+openAiClient = OpenAI(api_key = config["spicyKey"])
 
 def getChatGptResponse(content):
     stream = openAiClient.chat.completions.create(
